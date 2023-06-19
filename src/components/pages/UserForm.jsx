@@ -16,11 +16,18 @@ export default function UserForm() {
   });
 
   const handleSubmit = (values, { resetForm }) => {
-    const userData = JSON.stringify(values);
-    localStorage.setItem('userData', userData);
+    const userData = localStorage.getItem("userData");
+    let users = [];
+
+    if (userData) {
+      users = JSON.parse(userData);
+    }
+
+    users.push(values);
+
+    localStorage.setItem("userData", JSON.stringify(users));
     resetForm();
   };
-  
 
   return (
     <Formik
@@ -96,7 +103,9 @@ export default function UserForm() {
             <br />
           </div>
 
-          <button className={userForm.submitBtn} type="submit">Submit</button>
+          <button className={userForm.submitBtn} type="submit">
+            Submit
+          </button>
         </Form>
       )}
     </Formik>

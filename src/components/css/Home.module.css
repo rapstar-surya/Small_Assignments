@@ -8,3 +8,17 @@
 .nav h1{
     margin-left: 25%;
 }
+.tableContainer{
+    margin-left: 30%;
+}
+.table tr th{
+    color: aqua;
+    
+}
+.table tr th, tbody td {
+    border: 1px solid;
+}
+
+.delBtn:hover{
+    color: blue;
+}
