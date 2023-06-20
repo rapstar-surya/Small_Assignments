@@ -5,7 +5,7 @@ import userForm from "../css/userForm.module.css";
 import { useParams } from "react-router-dom";
 
 export default function EditUser({ match }) {
-    const { index } = useParams();
+    const { id } = useParams();
 
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First Name is required"),
@@ -25,7 +25,7 @@ export default function EditUser({ match }) {
       users = JSON.parse(userData);
     }
 
-    users[index] = values;
+    users[id] = values;
 
     localStorage.setItem("userData", JSON.stringify(users));
     resetForm();
