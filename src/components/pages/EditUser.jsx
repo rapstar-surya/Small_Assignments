@@ -58,8 +58,7 @@ export default function EditUser() {
 
     if (Object.keys(validationErrors).length === 0) {
       localStorage.setItem("userData", JSON.stringify(users));
-      // Additional logic for submitting
-      navigate("/"); // Redirect to the home page
+      navigate("/"); // Redirecting to the home page
     } else {
       setErrors(validationErrors);
     }

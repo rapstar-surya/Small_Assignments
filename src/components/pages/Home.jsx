@@ -46,7 +46,7 @@ export default function Home() {
                   <Link to={`/edit/${index}`} className={home.editBtn}>
                     Edit
                   </Link>
-
+                    &nbsp;
                   <button
                     className={home.delBtn}
                     onClick={() => handleDeleteUser(index)}
