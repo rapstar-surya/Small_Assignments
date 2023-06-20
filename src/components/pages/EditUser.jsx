@@ -35,7 +35,7 @@ export default function EditUser() {
     const firstNameRegex = /^[^\s]+$/; // Matches any non-empty string
     const lastNameRegex = /^[^\s]+$/; // Matches any non-empty string
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email format validation
-    const phoneNumberRegex = /^\d{10,15}$/; // Matches 10 to 15 digits
+    const phoneNumberRegex = /^[0-9]{10,15}$/; // Matches 10 to 15 digits - number datatypes
 
     let validationErrors = {};
 
@@ -53,7 +53,7 @@ export default function EditUser() {
 
     if (!phoneNumberRegex.test(users[id]?.phoneNumber || "")) {
       validationErrors.phoneNumber =
-        "Phone Number must be between 10 to 15 digits";
+        "Phone Number must be between 10 to 15 digits, no alphabets allowed ";
     }
 
     if (Object.keys(validationErrors).length === 0) {

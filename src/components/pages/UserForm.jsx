@@ -11,8 +11,9 @@ export default function UserForm() {
     email: Yup.string().email("Invalid email").required("Email is required"),
     phoneNumber: Yup.string()
       .required("Phone Number is required")
-      .min(10, "Phone Number must be at least 10 characters")
-      .max(15, "Phone Number can be maximum 15 characters"),
+      .matches(/^[0-9]+$/, "Phone Number can only contain digits")
+      .min(10, "Phone Number must be at least 10 digits")
+      .max(15, "Phone Number can be maximum 15 digits"),
   });
 
   const handleSubmit = (values, { resetForm }) => {
