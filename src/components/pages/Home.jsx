@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import home from "../css/Home.module.css";
 
 export default function Home() {
@@ -31,7 +32,6 @@ export default function Home() {
               <th>Email</th>
               <th>Phone Number</th>
               <th>Action</th>
-             
             </tr>
           </thead>
           <tbody>
@@ -40,10 +40,13 @@ export default function Home() {
                 <td>
                   {user.firstName}&nbsp;{user.lastName}
                 </td>
-
                 <td>{user.email}</td>
                 <td>{user.phoneNumber}</td>
                 <td>
+                  <Link to={`/edit/${index}`} className={home.editBtn}>
+                    Edit
+                  </Link>
+
                   <button
                     className={home.delBtn}
                     onClick={() => handleDeleteUser(index)}

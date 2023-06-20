@@ -5,20 +5,30 @@
 
 }
 
-.nav h1{
+.nav h1 {
     margin-left: 25%;
 }
-.tableContainer{
+
+.tableContainer {
     margin-left: 30%;
 }
-.table tr th{
+
+.table tr th {
     color: aqua;
-    
-}
-.table tr th, tbody td {
-    border: 1px solid;
+
 }
 
-.delBtn:hover{
+.table tr th,
+tbody td {
+    border: 1px solid;
+}
+.editBtn{
+    text-decoration: none;
+}
+.editBtn:hover {
+    color: blue;
+}
+
+.delBtn:hover {
     color: blue;
 }
