@@ -1,115 +1,142 @@
-import React from "react";
-import { Formik, Field, Form } from "formik";
-import * as Yup from "yup";
+import React, { useEffect, useState } from "react";
 import userForm from "../css/userForm.module.css";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
-export default function EditUser({ match }) {
-    const { id } = useParams();
+export default function EditUser() {
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required("First Name is required"),
-    lastName: Yup.string().required("Last Name is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    phoneNumber: Yup.string()
-      .required("Phone Number is required")
-      .min(10, "Phone Number must be at least 10 characters")
-      .max(15, "Phone Number can be maximum 15 characters"),
-  });
+  const [users, setUsers] = useState([]);
+  const [errors, setErrors] = useState({});
 
-  const handleSubmit = (values, { resetForm }) => {
-    const userData = localStorage.getItem("userData");
-    let users = [];
+  useEffect(() => {
+    let storedUserData = localStorage.getItem("userData");
+    if (storedUserData) {
+      setUsers(JSON.parse(storedUserData));
+    }
+  }, []);
 
-    if (userData) {
-      users = JSON.parse(userData);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUsers((prevUsers) => {
+      const updatedUsers = [...prevUsers];
+      updatedUsers[id] = {
+        ...updatedUsers[id],
+        [name]: value,
+      };
+      return updatedUsers;
+    });
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const firstNameRegex = /^[^\s]+$/; // Matches any non-empty string
+    const lastNameRegex = /^[^\s]+$/; // Matches any non-empty string
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email format validation
+    const phoneNumberRegex = /^\d{10,15}$/; // Matches 10 to 15 digits
+
+    let validationErrors = {};
+
+    if (!firstNameRegex.test(users[id]?.firstName || "")) {
+      validationErrors.firstName = "First Name cannot be blank";
     }
 
-    users[id] = values;
+    if (!lastNameRegex.test(users[id]?.lastName || "")) {
+      validationErrors.lastName = "Last Name cannot be blank";
+    }
 
-    localStorage.setItem("userData", JSON.stringify(users));
-    resetForm();
+    if (!emailRegex.test(users[id]?.email || "")) {
+      validationErrors.email = "Invalid email format";
+    }
+
+    if (!phoneNumberRegex.test(users[id]?.phoneNumber || "")) {
+      validationErrors.phoneNumber =
+        "Phone Number must be between 10 to 15 digits";
+    }
+
+    if (Object.keys(validationErrors).length === 0) {
+      localStorage.setItem("userData", JSON.stringify(users));
+      // Additional logic for submitting
+      navigate("/"); // Redirect to the home page
+    } else {
+      setErrors(validationErrors);
+    }
   };
 
   return (
-    <Formik
-      initialValues={{
-        firstName: "",
-        lastName: "",
-        email: "",
-        phoneNumber: "",
-      }}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      {({ errors, touched }) => (
-        <Form className={userForm.form}>
-          <h1>Edit User</h1>
-          <div>
-            <label htmlFor="firstName">First Name</label> <br />
-            <Field
-              className={userForm.field}
-              type="text"
-              id="firstName"
-              name="firstName"
-            />{" "}
-            <br />
-            {errors.firstName && touched.firstName && (
-              <div className={userForm.errors}>{errors.firstName}</div>
-            )}{" "}
-            <br />
-          </div>
+    <>
+      <form className={userForm.form} onSubmit={handleSubmit}>
+        <h1>Edit User</h1>
+        <div>
+          <label htmlFor="firstName">First Name</label> <br />
+          <input
+            className={userForm.field}
+            type="text"
+            name="firstName"
+            value={users[id]?.firstName || ""}
+            onChange={handleInputChange}
+          />{" "}
+          <br />
+          {errors.firstName && (
+            <div className={userForm.errors}>{errors.firstName}</div>
+          )}
+          <br />
+        </div>
 
-          <div>
-            <label htmlFor="lastName">Last Name</label> <br />
-            <Field
-              className={userForm.field}
-              type="text"
-              id="lastName"
-              name="lastName"
-            />{" "}
-            <br />
-            {errors.lastName && touched.lastName && (
-              <div className={userForm.errors}>{errors.lastName}</div>
-            )}{" "}
-            <br />
-          </div>
+        <div>
+          <label htmlFor="lastName">Last Name</label> <br />
+          <input
+            className={userForm.field}
+            type="text"
+            name="lastName"
+            value={users[id]?.lastName || ""}
+            onChange={handleInputChange}
+          />{" "}
+          <br />
+          {errors.lastName && (
+            <div className={userForm.errors}>{errors.lastName}</div>
+          )}
+          <br />
+        </div>
 
-          <div>
-            <label htmlFor="email">Email</label> <br />
-            <Field
-              className={userForm.field}
-              type="email"
-              id="email"
-              name="email"
-            />{" "}
-            <br />
-            {errors.email && touched.email && (
-              <div className={userForm.errors}>{errors.email}</div>
-            )}{" "}
-            <br />
-          </div>
+        <div>
+          <label htmlFor="email">Email</label> <br />
+          <input
+            className={userForm.field}
+            type="email"
+            name="email"
+            value={users[id]?.email || ""}
+            onChange={handleInputChange}
+          />{" "}
+          <br />
+          {errors.email && (
+            <div className={userForm.errors}>{errors.email}</div>
+          )}
+          <br />
+        </div>
 
-          <div>
-            <label htmlFor="phoneNumber">Phone Number</label> <br />
-            <Field
-              className={userForm.field}
-              type="text"
-              id="phoneNumber"
-              name="phoneNumber"
-            />{" "}
-            <br />
-            {errors.phoneNumber && touched.phoneNumber && (
-              <div className={userForm.errors}>{errors.phoneNumber}</div>
-            )}{" "}
-            <br />
-          </div>
+        <div>
+          <label htmlFor="phoneNumber">Phone Number</label> <br />
+          <input
+            className={userForm.field}
+            type="text"
+            name="phoneNumber"
+            value={users[id]?.phoneNumber || ""}
+            onChange={handleInputChange}
+          />{" "}
+          <br />
+          {errors.phoneNumber && (
+            <div className={userForm.errors}>{errors.phoneNumber}</div>
+          )}
+          <br />
+        </div>
 
-          <button className={userForm.submitBtn} type="submit">
-            Submit
-          </button>
-        </Form>
-      )}
-    </Formik>
+        <button className={userForm.submitBtn} type="submit">
+          Submit
+        </button>
+      </form>
+    </>
   );
 }
